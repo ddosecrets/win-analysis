@@ -1,0 +1,4 @@
+*.db
+*.ndjson
+*.xlsx
+.*.swp
