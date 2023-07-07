@@ -6,7 +6,7 @@ The original release format is a newline-delimited JSON (NDJSON) file, where eac
 
 1. `convertToSQLite.py` converts the JSON to a SQLite3 database with two tables, one for comments and one for posts
 
-2. `convertToExcel.py` converts the SQLite3 database to two excel spreadsheets, one for comments and one for posts
+2. `convertToExcel.py` converts the SQLite3 database to excel spreadsheets. One spreadsheet for all posts, and one spreadsheet per-site for comments. See "Excel Limitations" below for details.
 
 ### USAGE
 
@@ -16,9 +16,13 @@ Second, install dependencies for this project:
 
     pip3 install -r requirements.txt
 
-Note that if only SQLite3 is required, you can install a subset of the dependencies:
+Or install them by hand. For exporting to SQLite3, you need only:
 
-    pip3 install sqlite3 tqdm
+    pip3 install tqdm
+
+While to export to Excel you will need:
+
+    pip3 install tqdm pandas openpyxl
 
 Finally, launch both scripts, like:
 
@@ -97,4 +101,14 @@ While the posts table has the schema:
 		site TEXT,
 		html TEXT);
 
-The Excel spreadsheets have columns corresponding to these table fields.
+### Excel Limitations
+
+The Excel spreadsheets have columns corresponding to the SQLite table fields. However, there are a few caveats:
+
+1. The `html` field is dropped entirely, to keep spreadsheets small enough to not crash Excel, and to avoid weird parsing errors
+
+2. The `thedonald` .Win site has too many comments to fit in an Excel spreadsheet, as it exceeds Excel's maximum row count. This site is exported as CSV instead.
+
+3. Posts and comments containing URLs probably do not have these URLs formatted correctly
+
+In general, the Excel export is of lower quality than the SQLite export, due to limitations in the Pandas library's Excel export functionality, the xlsx data format, and Microsoft Excel. This script is provided for convenience, but really, the SQLite export is preferable.
